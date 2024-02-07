@@ -18,7 +18,7 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {	// 여기에 외부 라이브러리 설치 코드
+dependencies {	// 여기에 외부 라이브러리 설치 코드 https://start.spring.io/
 	// 1 스프링 웹
 	implementation 'org.springframework.boot:spring-boot-starter-web' // spring web
 	testImplementation 'org.springframework.boot:spring-boot-starter-test' // spring web test
@@ -26,6 +26,9 @@ dependencies {	// 여기에 외부 라이브러리 설치 코드
 	runtimeOnly 'com.mysql:mysql-connector-j' // mysql 라이브러리
 	// 3. 머스테치 : 화면 뷰
 	implementation 'org.springframework.boot:spring-boot-starter-mustache'
+	// 4. 롬복
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {

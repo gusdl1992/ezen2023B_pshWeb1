@@ -1,0 +1,11 @@
+{{>layouts/header}} <!-- 헤더 파일 호출-->
+
+<!-- 어디로 어떻게 라는 방식이 필요! -->
+<!-- @PostMapping("/articles/create") -->
+<form action="/articles/create" method="post">
+    제목:<input type="text" name="title"/> <br/>
+    내용:<textarea name="content"></textarea> <br/>
+    <button type="submit">제출</button>
+</form>
+
+{{>layouts/footer}} <!-- 푸터 파일 호출 -->
