@@ -1,65 +1,86 @@
 package book.dao;
 
 import book.dto.ArticleForm;
-import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
-@Component // 스프링 컨테이너에 해당 클래스 빈(객체) 등록
-@Slf4j // 간단한 로그 처리
+@Component // 스프링 컨테이너에 해당 클래스를 빈(객체) 등록
 public class ArticleDao {
-
-    // ----------- JDBC DB 연동 -------------//
-    // 1. DB 연동 필요한 인터페이스 필드 선언
-    private Connection conn; // DB 연동 결과 객체를 연결 , 기재된 SQL Statement 객체 반환
-    private PreparedStatement ps;  // 개재된 SQL 에 매개변수 할당 , SQL 실행
-    private ResultSet rs;           // select 결과 여러개 레코드를 호출
-
-    public ArticleDao(){
+    // ---------- JDBC DB연동 ----------//
+    // 1. DB연동 필요한 인터페이스( 구현객체 => 각 회사(mysql com.mysql.cj.jdbc패키지내 Driver클래스 ) ) 필드 선언
+    private Connection conn; // DB연동 결과 객체를 연결 , 기재된 SQL Statement객체 반환.
+    private PreparedStatement ps;  // 기재된 SQL에 매개변수 할당 , SQL 실행
+    private ResultSet rs;          // select 결과 여러개 레코드를 호출
+    public ArticleDao(){         // db연동를 생성자에서 처리
         try {
-            // 1. MYSQL 회사의 JDBC 관련된 객체를 JVM 에 로딩한다. 불러오기.
+            // 1. mysql JDBC 호출 ( 각 회사별  상이 , 라이브러리 다운로드 )
             Class.forName("com.mysql.cj.jdbc.Driver");
-            // 2. 연동된 결과의(구현체) 객체를 Connection 인터페이스에 대입한다.
-            conn = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/springweb",
-                    "root" , "1234"
-            );
-
-        }catch (Exception e){
-            System.out.println("ArticleDao.ArticleDao");
-            System.out.println("DB연동 = " + e);
-
-
-        }
-
+            // 2. 해당 db서버의 주소와 db연동
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/springweb", "root", "1234");
+        }catch (Exception e ){   System.out.println(e); }
     }
-
-    public boolean crateArticle(ArticleForm form){
-        System.out.println("ArticleDao.crateArticle");
+    // ---------- ---------- ----------//
+    // ---------- SQL 이벤트  ----------//
+    // 1. 글쓰기 처리
+    public boolean createArticle( ArticleForm form ){
+        System.out.println("ArticleDao.createArticle");
         System.out.println("form = " + form);
-        try { // 0. try catch 작성
-            // 1.
-            String sql ="insert into article(title , content) values(? , ?)";
-            // 2.
-            ps = conn.prepareStatement(sql);
-            // 3.
-            ps.setString(1,form.getTitle());
-            ps.setString(2, form.getContent());
+
+        try{      // 0. try{}catch (Exception e ){}
+            String sql ="insert into article( title , content ) values( ? , ? )"; // 1.
+            ps = conn.prepareStatement(sql); // 2.
+            ps.setString( 1 , form.getTitle() ); // 3.
+            ps.setString( 2 , form.getContent() );
             // 4.
             int count = ps.executeUpdate();
             // 5.
-            if (count == 1){ return true; }
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
+            if( count == 1 ) return true;
+        }catch (Exception e ){  System.out.println(e);  }
         return false;
     }
 
-    
+    // ---------- ---------- ----------//
+    // 2. 개별 글 조회 : 매개변수: 조회할게시물번호(id) 반환:조회한게시물정보 1개(DTO)
+    public ArticleForm show( Long id ){
+        try{
+            String sql = "select * from article where id  = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setLong( 1  , id );
+            rs = ps.executeQuery();
+            if( rs.next() ){ // 1개 게시물을 조회 할 예정이라서 next() 한번 처리.
+                ArticleForm form = new ArticleForm(
+                        rs.getLong(1) ,
+                        rs.getString( 2 ) ,
+                        rs.getString( 3 ) );
+                return form;
+            }
+        }catch (Exception e ){   System.out.println("e = " + e);    }
+        return null;
+    }
+    // ---------- ---------- ----------//
+    // 3. 개별 글 조회 : 매개변수 : x , 리턴타입 : ArrayList
+    public List<ArticleForm> index(){
+        List<ArticleForm> list = new ArrayList<>();
+        try{
+            String sql ="select * from article";
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while ( rs.next() ){
+                ArticleForm form = new ArticleForm( // 1. 객체 만들기
+                        rs.getLong(1),
+                        rs.getString( 2 ),
+                        rs.getString( 3 )
+                );
+                list.add( form );  // 2. 객체를 리스트에 넣기
+            }
+        }catch (Exception e ){ System.out.println( e );  }
+        return list;
+    }
 }

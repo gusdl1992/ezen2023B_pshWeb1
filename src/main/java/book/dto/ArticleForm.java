@@ -11,10 +11,11 @@ import lombok.*;
 
 @AllArgsConstructor // 컴파일시 모든 필드 생성자를 자동으로 만들어준다.  [ 롬복 ]
 @NoArgsConstructor  // 컴파일시 기본 생성자를 자동으로 만들어준다.
-@ToString           // 컴파일시 toString() 자동으로 만들어준다.
-@Getter @Setter     // 컴파일시 setter / getter 메소드를 자동으로 만들어준다.
+@ToString
+@Getter @Setter
 public class ArticleForm {
     // 1. 필드
+    private Long id;      // ID
     private String title; // 입력받은 제목 필드
     private String content; // 입력받은 내용 필드
 
