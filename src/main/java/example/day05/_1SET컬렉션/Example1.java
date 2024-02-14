@@ -9,7 +9,7 @@ public class Example1 {
     public static void main(String[] args) {
 
         /*
-
+ㅇ
         set 컬렉션
             - 저장 순서/인덱스 유지 되지 않는다. , 저장 순서 보장 X
                 - 중복 저장할 수 없다 , null 하나만 가능하다
