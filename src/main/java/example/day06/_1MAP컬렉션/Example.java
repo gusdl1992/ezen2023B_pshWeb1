@@ -97,8 +97,8 @@ public class Example {
         // 2.
         properties.setProperty("driver" , "com.mysql.cj.jdbc.Driver");
         properties.setProperty("URL" , "jdbc:mysql://localhost:3306/springweb");
-        properties.setProperty("admin" , "root");
-        properties.setProperty("password" , "1234");
+        properties.setProperty("admin" , "아이디");
+        properties.setProperty("password" , "패스워드");
         // 3.
         System.out.println(properties.getProperty("driver") );
         System.out.println(properties.getProperty("URL") );

@@ -115,7 +115,7 @@ public class ArticleController {
     }
     // @PathVariable : 1. 요청한 HTTP URL 경로상의 매개변수 대입 2. 자동 타입변환
         // URL :  /articles/{매개변수명}/edit , 예시 : /articles/1/edit , 예시 : /articles/2/edit
-        // JAVA함수 ( @PathVariable("URL매개벼수명") 타입 매개변수명   )
+        // JAVA함수 ( @PathVariable("URL 매개 변수명") 타입 매개변수명   )
         //      URL 매개변수명 생략시 함수의 매개변수 명과 일치할 경우 자동 대입
 
     // p.214 수정 2단계 : 수정 데이터 받아 오기
@@ -131,6 +131,17 @@ public class ArticleController {
         // 3. 수정 처리된 상세페이지로 이동
         return  "redirect:/articles/"+updated.getId();
 
+    }
+
+    // p.234 삭제 : 삭제 요청
+    @GetMapping("/articles/{id}/delete")
+    public String delete(@PathVariable long id){
+        System.out.println("id = " + id);
+        // 1. 삭제할 대상
+        // 2. Dao 삭제 요청하고 응답받기
+        boolean result = articleDao.delete(id);
+        // 3. 결과 페이지로 리다이렉트 하기.
+        return "redirect:/articles";
     }
 
 }

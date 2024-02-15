@@ -212,3 +212,20 @@ com.samskivert.mustache.MustacheException$Context: No key, method or field with 
 2024-02-15T14:53:59.518+09:00 ERROR 3136 --- [http-nio-80-exec-3] book.controller.ArticleController        : ArticleForm(id=null, title=ㅁㄴㅇ123, content=123123)
 2024-02-15T14:56:05.008+09:00 ERROR 10396 --- [http-nio-80-exec-2] book.controller.ArticleController        : ArticleForm(id=null, title=123, content=123)
 2024-02-15T14:56:36.212+09:00 ERROR 10396 --- [http-nio-80-exec-3] book.controller.ArticleController        : ArticleForm(id=null, title=ㅁㄴㅇ, content=ㅁㄴㅇㅁㄴㅇㅁㄹ)
+2024-02-15T17:20:45.917+09:00 ERROR 8220 --- [main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Invalid mapping pattern detected:
+/articles/{ id }/delete
+           ^
+Char ' ' not allowed at start of captured variable name
+
+Action:
+
+Fix this pattern in your application or switch to the legacy parser implementation with 'spring.mvc.pathmatch.matching-strategy=ant_path_matcher'.
+
