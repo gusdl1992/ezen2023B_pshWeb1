@@ -11,10 +11,13 @@
     {{#articleList}}
         <tr>
             <td> {{ id }} </td>
-            <td> {{ title }} </td>
+            <td><a href="/articles/{{id}}">{{ title }} </a></td>
             <td> {{ content }} </td>
         </tr>
     {{/articleList}}
     </tbody>
 </table>
+
+    <!-- a 태그는 GET 방식 -->
+    <a href="/articles/new">글쓰기(New Article)</a>
 {{>layouts/footer}}

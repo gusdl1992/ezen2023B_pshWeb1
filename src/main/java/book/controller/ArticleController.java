@@ -8,10 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpRequest;
 import java.util.Date;
@@ -37,7 +34,7 @@ public class ArticleController {
     // 2. 입력태그 속성의 name과 DTO 필드의 필드명 일치하면 자동 연결/대입 된다.
     // 3. public 생성자 필요
     @PostMapping("/articles/create")    // HTTP 요청 경로 : POST방식 : localhost:80/articles/create
-    public boolean createArticle( ArticleForm form ){
+    public String createArticle( ArticleForm form ){
         // soutm : 메소드명 출력
         System.out.println( new Date() );
         System.out.println("ArticleController.createArticle");
@@ -57,9 +54,11 @@ public class ArticleController {
         log.info( form.toString() ); // 자동완성 : 메누 -> 파일 -> 설정 -> 플러그인 -> 마켓플레이스 -> Lombok 설치
 
         // DAO에게 요청하고 응답 받기.
-        boolean result = articleDao.createArticle( form );
+        ArticleForm saved  = articleDao.createArticle( form );
 
-        return result;
+        return "redirect:/articles/"+saved.getId();    // URL 재요청
+        // return "redirect:/articles/{id}";    // URL 재요청
+        // return "articles/index";    // 템플릿 반환 : 사이트가 이동되기는 하지만 글이 보이지않는다 이유는 model 이 없어서
     } // m end
 
     // p.156 조회
@@ -102,6 +101,37 @@ public class ArticleController {
         return "articles/index";
     }
 
+    // p.202 수정 1단계 : 기존 데이터 불러오기    
+    @GetMapping("/articles/{id}/edit")  // GetMapping 이유 : 1. 요청 2. <a> 태그 사용
+    public String edit(@PathVariable long id , Model model){
+        System.out.println("수정페이지");
+        System.out.println("id = " + id);
+        // 1. DAO 에게 요청하고 응답 받는다.
+        ArticleForm form = articleDao.findById(id);
+        // 2. 응답결과를 뷰 템플릿 에게 보낼 준비 model.
+        model.addAttribute("article" , form);
+        // 3. 뷰 페이지 설정
+        return "articles/edit";
+    }
+    // @PathVariable : 1. 요청한 HTTP URL 경로상의 매개변수 대입 2. 자동 타입변환
+        // URL :  /articles/{매개변수명}/edit , 예시 : /articles/1/edit , 예시 : /articles/2/edit
+        // JAVA함수 ( @PathVariable("URL매개벼수명") 타입 매개변수명   )
+        //      URL 매개변수명 생략시 함수의 매개변수 명과 일치할 경우 자동 대입
+
+    // p.214 수정 2단계 : 수정 데이터 받아 오기
+    @PostMapping("/article/update")    // @PatchMapping @PutMapping
+    public String update(ArticleForm form){
+        // *  form 입력 데이터를 Dto 매개변수로 받을때
+            // 1. form 입력상자의 name 과 Dto의 필드명 동일
+            // 2. Dto의 필드 값을 저장할 생성자 필요.
+
+
+        // 2. DAO 에게 요청하고 응답 받기
+        ArticleForm updated = articleDao.update(form);
+        // 3. 수정 처리된 상세페이지로 이동
+        return  "redirect:/articles/"+updated.getId();
+
+    }
 
 }
 

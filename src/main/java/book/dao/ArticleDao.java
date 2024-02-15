@@ -4,10 +4,7 @@ import book.dto.ArticleForm;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,21 +26,41 @@ public class ArticleDao {
     // ---------- ---------- ----------//
     // ---------- SQL 이벤트  ----------//
     // 1. 글쓰기 처리
-    public boolean createArticle( ArticleForm form ){
+    public ArticleForm createArticle( ArticleForm form ){
         System.out.println("ArticleDao.createArticle");
         System.out.println("form = " + form);
+        // 1. 성공시 반환할 Dto
+        ArticleForm saved = new ArticleForm();
 
         try{      // 0. try{}catch (Exception e ){}
             String sql ="insert into article( title , content ) values( ? , ? )"; // 1.
-            ps = conn.prepareStatement(sql); // 2.
+
+            // ps = conn.prepareStatement(sql); // 2.
+            // * insert 된 auto_increment 자동번호 식별키 호출하는 방법
+            // 1. SQL 기재 할때 자동으로 생성된 키 호출 선언
+            // 2. ps.getGeneratedKeys(); 이용한 생성된 키 목록 반환
+            // 3. rs.next() -----> rs.get타입(1) : 방금 생성된 키 반환
+            ps = conn.prepareStatement(sql , Statement.RETURN_GENERATED_KEYS);
+
             ps.setString( 1 , form.getTitle() ); // 3.
             ps.setString( 2 , form.getContent() );
             // 4.
             int count = ps.executeUpdate();
+            rs = ps.getGeneratedKeys();
+
+            if (rs.next()){
+                System.out.println("방금 자동으로 생성된 pk(id)" + rs.getLong(1));
+                long id = rs.getLong(1);
+                saved.setId(id);
+                // 아래 2개는 생략 가능
+                saved.setTitle(form.getTitle());
+                saved.setContent(form.getContent());
+                return saved;
+            }
             // 5.
-            if( count == 1 ) return true;
+//            if( count == 1 ) return true;
         }catch (Exception e ){  System.out.println(e);  }
-        return false;
+        return saved;
     }
 
     // ---------- ---------- ----------//
@@ -83,4 +100,46 @@ public class ArticleDao {
         }catch (Exception e ){ System.out.println( e );  }
         return list;
     }
+
+
+    //----------------------------------------------------------------//
+    // 4. id에 해당하는 게시물 정보 호출, 매개변수 id , 리턴 : Dto
+    public ArticleForm findById(long id){
+        try {
+            String sql = "select * from article where id = ?";
+            ps = conn.prepareCall(sql);
+            ps.setLong(1 , id);
+            rs = ps.executeQuery();
+            if (rs.next()){
+                // * 하나의 레코드를 Dto 로 생성
+                return new ArticleForm(
+                        rs.getLong(1),
+                        rs.getString(2) ,
+                        rs.getString(3)
+                );
+            }
+        }catch (Exception e){
+            System.out.println("findById : " + e);
+        }
+        return null;
+    }
+
+    // 5. 수정처리 , 매개변수 : 수정할pk , 수저할값들 , 리턴 : DTO
+    public ArticleForm update(ArticleForm form){
+        try {
+            String sql = "update article set title = ? , content = ? where id = ?";
+            ps = conn.prepareStatement(sql);
+            ps.setLong(3 , form.getId());
+            ps.setString(1, form.getTitle());
+            ps.setString(2 , form.getContent() );
+            int count = ps.executeUpdate();
+            if(count == 1){
+                return form;
+            }
+        }catch (Exception e){
+            System.out.println("update e = " + e);
+        }
+        return null;
+    }
+
 }
