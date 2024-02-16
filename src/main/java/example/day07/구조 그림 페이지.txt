@@ -1,0 +1,10 @@
+(자료구조) 그림
+p.641 list 구조
+p.647 linkdList 구조
+p.650 Set 구조
+p.656 Map 구조
+p.664 Tree 이진트리 : p.665 TreeSet , p.668 TreeMap
+p.676 Stack / Queue
+
+* 상황에 따라 적합한 데이터를 구조화 할수 있다.
+* 안써도 문제없음. 하지만 쓰면 효율적인 제공
