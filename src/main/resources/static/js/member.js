@@ -31,6 +31,7 @@ function signup(){
                 }
             }
         })
+
 }
 // 2. 로그인
 function login(){
