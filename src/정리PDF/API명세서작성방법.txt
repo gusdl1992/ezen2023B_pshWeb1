@@ -1,0 +1,33 @@
+RESTAPI 명세서 장석
+
+기능
+
+요청 HTTP										서버 HTTP Requst			서버HTTP Response
+기능		URL	params 설명		method	contentType			mapping		parms		응답			contentType
+index 요청 	/index				GET	text/html				@GetMapping			머스테치 파일		text/html	
+회원가입 요청	/join 	{ id = "회원아이디"		POST	application/x-www-form-urlencode	@PostMapping	MembeFormform	"redirect:/index";
+			 pw = "비밀번호"
+			 }
+로그인 요청	/login	{ id = "회원아이디"		POST	application/x-www-form-urlencode	@PostMapping	MembeFormform	"redirect:/index/"+ saved.getid();
+			 pw = "비밀번호"
+			}
+
+1.회원가입 처리요청       /member/signup          {             POST          application/x-www-form-urlencode        @PostMapping          MemberDto dto         boolean : true/false                @ResponseBody     application/json;
+                                                 id ="아이디",
+                                                 pw ="비밀번호",
+                                                 name = "이름",
+                                                 email = "이메일",
+                                                 phone = "전화번호",
+                                                 ing = "프로필사진"
+                                                }
+
+2.로그인 처리요청      /member/login              {              POST          application/x-www-form-urlencode        @PostMapping            LoginDto dto         boolean : true/false               @ResponseBody     application/json;
+                                                 id ="아이디",
+                                                 pw ="비밀번호",
+                                                   }
+
+회원가입 페이지요청   /member/signup			GET	   text/html			     @GetMapping							머스테치 파일		text/html	
+
+로그인 페이지요청     /member/login  			GET	   text/html	 		     @GetMapping							머스테치 파일		text/html					
+		* URL 주소와 method가 동일한경우 충돌 불가능!
+
