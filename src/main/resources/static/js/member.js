@@ -44,10 +44,10 @@ function login(){
 
     // 3. 서버와 통신
     $.ajax({
-       url : '/member/login',
-       method : 'POST',
-       data :  info ,
-       success : function ( result ){ console.log(result);
+       url : '/member/login',   // controller 매핑 주소
+       method : 'POST',         // controller POST , GET  매핑
+       data :  info ,           // controller 매개변수
+       success : function ( result ){ console.log(result);  // controller return
            // 4. 결과
            if(result){
                alert('로그인 성공!')
