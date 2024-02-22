@@ -12,7 +12,7 @@ function ecreate(){
     // 2. 객체화
     let info = {
         ename : ename ,
-        ephone : ename
+        ephone : ephone
     };
     // controller 전송
     console.log('info = ' + info)
