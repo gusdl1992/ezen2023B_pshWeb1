@@ -41,7 +41,7 @@ public class Example2 {
         System.out.println("ever 앞 단어 : "  + treeMap.lowerEntry("ever") );
 
 
-        System.out.println(treeMap.descendingMap() );
+        System.out.println("내림차순 정리 : " + treeMap.descendingMap() );
 
         // 5. 범위 검색 ( c는 포함 h는 미포함 검색 )
         System.out.println(treeMap.subMap("c" , true , "h" ,false));
