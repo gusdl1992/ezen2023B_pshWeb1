@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* 폰트 지정 */
+            text-align: center; /* 텍스트 가운데 정렬 */
+            background-color: #f4f4f4; /* 배경색 지정 */
+            margin: 0; /* 바디 마진 없앰 */
+            padding: 0; /* 바디 패딩 없앰 */
+        }
+
+        .container {
+            width: 300px; /* 컨테이너의 너비 지정 */
+            margin: 100px auto; /* 가운데 정렬 */
+        }
+
+        .button {
+            display: inline-block; /* 인라인 블록 요소로 지정 */
+            padding: 10px 20px; /* 내부 여백 지정 */
+            font-size: 16px; /* 폰트 크기 지정 */
+            font-weight: bold; /* 폰트 굵기 지정 */
+            color: #fff; /* 텍스트 색상 지정 */
+            background-color: #007bff; /* 배경색 지정 */
+            border: none; /* 테두리 없앰 */
+            border-radius: 5px; /* 테두리 모서리를 둥글게 만듦 */
+            cursor: pointer; /* 마우스 커서를 포인터로 변경 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 효과 추가 */
+            transition: background-color 0.3s; /* 배경색 변경 시 부드럽게 변화하도록 설정 */
+        }
+
+        .button:hover {
+            background-color: #0056b3; /* 호버 시 배경색 변경 */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>메인 페이지</h2>
+<!--   a 태그의 href(링크도) 컨트롤러에 get 매핑 주소로 해야한다. -->
+    <a href="/member/signup"><button class="button">회원가입</button></a> <!-- 회원가입 버튼 -->
+    <a href="/member/login"><button class="button">로그인</button></a> <!-- 로그인 버튼 -->
+</div>
+<script  src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script src="/js/_0224_member.js"></script>
+</body>
+</html>

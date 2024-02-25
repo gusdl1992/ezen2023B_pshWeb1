@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>게시판</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+        #loginForm{
+            display : block;
+            }
+    </style>
+</head>
+<body>
+
+<!-- 회원가입 폼 -->
+<div id="signupForm">
+    <h2>회원가입</h2>
+    <form id="signup" onsubmit="return signUp()">
+        <label for="username">사용자명:</label>
+        <input type="text" id="username" required>
+        <br>
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" required>
+        <br>
+        <button type="submit">가입하기</button>
+    </form>
+</div>
+
+<!-- 로그인 폼 -->
+<div id="loginForm" class="hidden">
+    <h2>로그인</h2>
+    <form id="login" onsubmit="return logIn()">
+        <label for="loginUsername">사용자명:</label>
+        <input type="text" id="loginUsername" required>
+        <br>
+        <label for="loginPassword">비밀번호:</label>
+        <input type="password" id="loginPassword" required>
+        <br>
+        <button type="submit">로그인</button>
+    </form>
+</div>
+
+<!-- 게시판 -->
+<div id="board" class="hidden">
+    <h2>게시판</h2>
+    <form id="postForm">
+        <label for="postContent">글쓰기:</label>
+        <textarea id="postContent" rows="4" cols="50"></textarea>
+        <br>
+        <button type="submit">게시</button>
+    </form>
+    <div id="posts">
+        <!-- 여기에 게시글이 동적으로 추가될 예정 -->
+    </div>
+    <button onclick="logOut()">로그아웃</button>
+</div>
+
+<script>
+    let currentUser = null;
+    const posts = [];
+
+    function signUp() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        // 여기서 회원가입 처리를 할 수 있음
+        // 예를 들어, 서버에 회원 정보를 전송하거나 로컬 스토리지에 저장할 수 있음
+        // 여기서는 단순히 사용자 정보만 설정
+        currentUser = { username, password };
+        showBoard();
+        return false; // 폼 제출 막기
+    }
+
+    function logIn() {
+        const username = document.getElementById("loginUsername").value;
+        const password = document.getElementById("loginPassword").value;
+        // 여기서 로그인 처리를 할 수 있음
+        // 예를 들어, 서버에 로그인 정보를 전송하고 인증을 처리하거나 로컬 스토리지에 저장된 정보와 비교할 수 있음
+        // 여기서는 단순히 사용자 정보가 있는지 확인
+        if (currentUser && currentUser.username === username && currentUser.password === password) {
+            showBoard();
+        } else {
+            alert("사용자명 또는 비밀번호가 잘못되었습니다.");
+        }
+        return false; // 폼 제출 막기
+    }
+
+    function logOut() {
+        currentUser = null;
+        document.getElementById("signupForm").classList.remove("hidden");
+        document.getElementById("loginForm").classList.remove("hidden");
+        document.getElementById("board").classList.add("hidden");
+    }
+
+    function showBoard() {
+        document.getElementById("signupForm").classList.add("hidden");
+        document.getElementById("loginForm").classList.add("hidden");
+        document.getElementById("board").classList.remove("hidden");
+    }
+
+    document.getElementById("postForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const postContent = document.getElementById("postContent").value;
+        posts.push({ username: currentUser.username, content: postContent });
+        renderPosts();
+        document.getElementById("postContent").value = "";
+    });
+
+    function renderPosts() {
+        const postsContainer = document.getElementById("posts");
+        postsContainer.innerHTML = "";
+        posts.forEach(post => {
+            const postElement = document.createElement("div");
+            postElement.innerHTML = `<strong>${post.username}</strong>: ${post.content}`;
+            postsContainer.appendChild(postElement);
+        });
+    }
+</script>
+
+</body>
+</html>
