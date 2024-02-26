@@ -12,3 +12,8 @@ public class AppStart {
     }
 
 }
+
+
+// 홈페이지 favicon ( 탭 로고 )   
+    // - ico 확장자 
+    // - resources -> static -> favicon.ico 로 저장

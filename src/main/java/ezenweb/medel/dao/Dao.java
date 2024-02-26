@@ -1,34 +1,24 @@
 package ezenweb.medel.dao;
 
-import ezenweb.medel.dto.LoginDto;
-import ezenweb.medel.dto.MemberDto;
-import org.springframework.stereotype.Component;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import java.util.ArrayList;
-
-@Component
 public class Dao {
-    static int number = 0;
+    public Connection conn;
+    public PreparedStatement ps;
+    public ResultSet rs;
 
-    ArrayList<MemberDto> memberDtos = new ArrayList<>();
-    public boolean doPostSignup(MemberDto memberDto){
+    public Dao(){ // DB 연동
+        try {
+            // 1. mysql JDBC 호출 ( 각 회사별  상이 , 라이브러리 다운로드 )
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            // 2. 해당 db서버의 주소와 db연동
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/springweb", "root", "1234");
+            System.out.println("DB 연동 성공");
+        }catch (Exception e ){   System.out.println("DB : e ->" + e ); }
 
-        System.out.println("Dao.doPostSignup");
-        memberDto.setNo(++number);
-        memberDtos.add(memberDto);
-        System.out.println("memberDtos = " + memberDtos);
-        return true;
-    }
-    public MemberDto doPostLogin(LoginDto loginDto){
-        System.out.println("Dao.doPostLogin");
-        if (memberDtos != null){
-            for (int i = 0 ; i < memberDtos.size() ; i++){
-                if (memberDtos.get(i).getId().equals(loginDto.getId()) && memberDtos.get(i).getPw().equals(loginDto.getPw())){
-                    return memberDtos.get(i);
-                }
-            }
-        }
-        return null;
     }
 
 }
