@@ -1,6 +1,7 @@
 package ezenweb.medel.dto;
 
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,7 +14,9 @@ public class MemberDto {
     private String name;
     private String email;
     private String phone;
-    private String img;
+    // private String img; 텍스트 형식
+    private MultipartFile img;  // input type = "file"(MultipartFile)  첨부 파일 형식
+    private String uuidFile;    //uuid+file
 
 
 }

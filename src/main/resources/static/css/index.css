@@ -29,7 +29,7 @@
 }
 /* 헤더 로고 이미지 */
 #head_logo > img{
-    width: 70px;
+    width: 50px;
 }
 .top_menu{
     display: flex;
@@ -44,7 +44,16 @@
 }
 #login_menu{
     display: flex;
+    align-items: center;
 }
 #login_menu > li{
     margin: 0 10px;
+}
+#login_menu > li > img{
+    width: 50px;
+    border-radius: 20px;
+    
+}
+.signUpForm > div > img{
+    border-radius: 10px;
 }

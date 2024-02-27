@@ -11,17 +11,28 @@ $.ajax({
         // 2. 무엇을
         let html = '';
         if(r != ''){ // 로그인 했을떄
-        html = `
-            <li class="nav-item">
-                <a class="nav-link" onclick = "logout()">로그아웃</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">내정보</a>
-            </li>
-            <li class="nav-item">
-                <img src="#"/> ${r}님
-            </li>
-        `;
+        $.ajax({
+            url : '/member/login/info' ,
+            method : 'get' , data:{id : r},
+            async : false ,
+            success : (r2) =>{
+                html = `
+                    <li class="nav-item">
+                        <a class="nav-link" onclick = "logout()">로그아웃</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">내정보</a>
+                    </li>
+                    <li class="nav-item">
+                        <img src="/img/${r2.uuidFile}"/> ${r}님
+                    </li>
+                `;
+            console.log(r2);
+            console.log(r2.uuidFile);
+            }
+        });
+
+
 
         }else{  // 로그인 안했을떄
             html = `
