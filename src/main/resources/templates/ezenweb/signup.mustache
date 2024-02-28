@@ -3,19 +3,36 @@
     <h3> 회원가입 페이지 </h3>
     <form class="signUpForm">
 <!--    <div>-->
-        아이디 : <input type="text" id="id" name="id"/> <br/>
-        비밀번호 : <input type="text" id="pw" name="pw"/> <br/>
-        비밀번호 확인 : <input type="text" id="pwconfirm" name="pwconfirm"/>   <br/>
-        이름 : <input type="text" id="name" name="name"/> <br/>
-        전화번호 : <input type="text" id="phone" name="phone"/>  <br/>
-        이메일 : <input type="text" id="email" name="email"/>   <br/>
+        <div> 아이디 </div>
+            <input onKeyup = "idcheck()" type="text" id="id" name="id"/> <br/>
+        <div class="idcheckbox"> 유효성 검사 결과 </div>
+
+        <div> 비밀번호 </div>
+            <input onKeyup = "pwcheckbox()" type="text" id="pw" name="pw"/> <br/>
+        <div> 비밀번호 확인 </div>
+            <input onKeyup = "pwcheckbox()" type="text" id="pwconfirm" name="pwconfirm"/>   <br/>
+        <div class="pwcheckbox"> 유효성 검사 결과 </div>
+
+        <div> 이름  </div>
+            <input onKeyup = "namecheckbox()" type="text" id="name" name="name"/> <br/>
+        <div class="namecheckbox"> 유효성 검사 결과 </div>
+
+        <div> 전화번호  </div>
+            <input onKeyup = "phonecheckbox()" type="text" id="phone" name="phone"/>  <br/>
+        <div class="phonecheckbox"> 유효성 검사 결과 </div>
+
+        <div> 이메일  </div>
+            <input onKeyup = "emailcheckbox()" type="text" id="email" name="email"/>   <br/>
+        <div class="emailcheckbox"> 유효성 검사 결과 </div>
+
         프로필 사진 : <input onchange="onChangeImg( this )" type="file" id="img" name="img" accept="image/* "/>  <br/>
         미리보기 :
         <div> <!-- 첨부파일 미리 보기  -->
-            <img id="preimg" src=""/>
+            <img id="preimg" src="/img/default.jpg"/>
         </div>
-        <a href="/member/login">로그인</a>
         <button type="button" onclick="signup()">회원 가입</button>
+        <a href="/member/login">로그인</a>
+
 <!--    </div>-->
     </form>
 
