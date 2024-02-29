@@ -42,7 +42,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;  // javamail 제공하는 객체 라이브러리
 
-    public void send(){
+    public void send(String toEmail , String subject , String content){
         // * 메일 내용물들을 포멧하기 위한 MIME 형식 객체
         MimeMessage message = javaMailSender.createMimeMessage();
         try {
@@ -52,11 +52,11 @@ public class EmailService {
             // 2. 메일 보내는 사람
             mimeMessageHelper.setFrom("tlgusdl92@naver.com"); // 관리자 이메일
             // 3. 메일 받는 사람
-            mimeMessageHelper.setTo("tlgusdl92@gmail.com"); // 클라이언트(회원) 이메일
+            mimeMessageHelper.setTo(toEmail); // 클라이언트(회원) 이메일
             // 4. 메일 제목
-            mimeMessageHelper.setSubject("안녕하세요. 자바입니다."); // ( 매개변수 )
+            mimeMessageHelper.setSubject(subject); // ( 매개변수 )
             // 5. 메일 내용
-            mimeMessageHelper.setText("자바에서 보내온 메세지 입니다."); // ( 매개변수 )
+            mimeMessageHelper.setText(content); // ( 매개변수 )
             // 6. 메일 전송
             javaMailSender.send(message);
         }catch (Exception e){

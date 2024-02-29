@@ -1,38 +1,46 @@
 {{>ezenweb/header}}
-
-    <h3> 회원가입 페이지 </h3>
+<div class = "container">
+    
     <form class="signUpForm">
+    <h3> 회원가입 페이지 </h3>
+    <p> 회원가입을 통해 다양한 이벤트에 참여하세요. </p>
 <!--    <div>-->
-        <div> 아이디 </div>
+        <div class="label" > 아이디 </div>
             <input onKeyup = "idcheck()" type="text" id="id" name="id"/> <br/>
-        <div class="idcheckbox"> 유효성 검사 결과 </div>
+        <div class="idcheckbox checkbox"></div>
 
-        <div> 비밀번호 </div>
+        <div class="label" > 비밀번호 </div>
             <input onKeyup = "pwcheckbox()" type="text" id="pw" name="pw"/> <br/>
-        <div> 비밀번호 확인 </div>
+        <div class="label" > 비밀번호 확인 </div>
             <input onKeyup = "pwcheckbox()" type="text" id="pwconfirm" name="pwconfirm"/>   <br/>
-        <div class="pwcheckbox"> 유효성 검사 결과 </div>
+        <div class="pwcheckbox checkbox"></div>
 
-        <div> 이름  </div>
+        <div class="label" > 이름  </div>
             <input onKeyup = "namecheckbox()" type="text" id="name" name="name"/> <br/>
-        <div class="namecheckbox"> 유효성 검사 결과 </div>
+        <div class="namecheckbox checkbox"></div>
 
-        <div> 전화번호  </div>
+        <div class="label" > 전화번호  </div>
             <input onKeyup = "phonecheckbox()" type="text" id="phone" name="phone"/>  <br/>
-        <div class="phonecheckbox"> 유효성 검사 결과 </div>
+        <div class="phonecheckbox checkbox"></div>
 
-        <div> 이메일  </div>
-            <input onKeyup = "emailcheckbox()" type="text" id="email" name="email"/>   <br/>
-        <div class="emailcheckbox"> 유효성 검사 결과 </div>
+        <div class="label" > 이메일  </div>
+        <div class="emailbox">
+            <input onKeyup = "emailcheckbox()" type="text" id="email" name="email"/>
+            <button type="button" onclick="authreq()" class="authreqbtn" disabled = "true"> 인증요청 </button>
+        </div>
+        <div class="authbox">
+
+        </div>
+        <div class="emailcheckbox checkbox"></div>
 
         프로필 사진 : <input onchange="onChangeImg( this )" type="file" id="img" name="img" accept="image/* "/>  <br/>
         미리보기 :
-        <div> <!-- 첨부파일 미리 보기  -->
+        <div class="preimgbox"> <!-- 첨부파일 미리 보기  -->
             <img id="preimg" src="/img/default.jpg"/>
         </div>
-        <button type="button" onclick="signup()">회원 가입</button>
-        <a href="/member/login">로그인</a>
-
+        <button class="signupbtn" type="button" onclick="signup()">회원 가입</button>
+        <button class="loginbtn" type"button"><a href="/member/login">로그인</a></button>
+</div>
 <!--    </div>-->
     </form>
 
