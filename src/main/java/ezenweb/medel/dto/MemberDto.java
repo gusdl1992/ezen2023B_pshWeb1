@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter @Setter @ToString
 public class MemberDto {
 
-    private int no;     /* 회원번호 */
+    private long no;     /* 회원번호 */
     private String id;
     private String pw;
     private String name;
