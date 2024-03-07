@@ -1,16 +1,28 @@
 package ezenweb.Service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.net.URLEncoder;
 import java.util.UUID;
 
 @Service // 해당 클래스를 스프링 컨터이너(저장소)에 빈(객체) 등록
 public class FileService {
     // Controller : 중계자 역할 ( HTTP매핑 , HTTP요청/응답 , 데이터 유효성검사 )등등
     // Service : Controller <--  Service(비지니로직) --> Dao ,  Controller <--> Service(비지니로직)
+
+    @Autowired
+    private HttpServletRequest request; // HTTP 로 요청을 보낸 정보와 기능/메소드  담긴 객체 ( 매개변수 와 브라우저 정보 - > 세션)
+    @Autowired
+    private HttpServletResponse response; // HTTP 로 응답을 보낼 정보와 기능/메소드 가지고 있는 객체
 
     // 어디에(PATH) 누구를(파일객체 MultipartFile )
     String uploadPath = "C:\\Users\\504\\Desktop\\ezen2023B_pshWeb1\\build\\resources\\main\\static\\img\\";
@@ -33,6 +45,80 @@ public class FileService {
         return filename; // 반환 : 어떤 이름으로 업로드 했는지 식별명 반환해서
     }
     // 2. 다운로드 메소드
+    public void fileDownLoad(String bfile){
+        System.out.println("FileService.fileDownLoad");
+        System.out.println("bfile = " + bfile);
+        // 1. 다운로드 할 파일의 경로 와 파일명 연결해서 해당 파일 찾기
+        String downloadPath = uploadPath+bfile;
+        System.out.println("downloadPath = " + downloadPath);
+
+        // 2. 해당 파일을 객체( 객체를 사용하는 이유 : (File)메소드를 사용 하려고. )로 가져오기 [ File 클래스 ]
+        File file = new File(downloadPath);
+        System.out.println("file = " + file);
+
+        // 3. file.exists() : 해당 경로에 파일이 있다. 없다 판단.
+        if (file.exists() ){
+            System.out.println("첨부파일 있다.");
+            try {
+                // HTTP 로 응답시 응답방법(다우론드 모양)에 대한 정보를 추가.
+                    // 기본값은 url 은 한글 지원 안한다.
+                    // url 에 한글 지원 하기 위해서sms URLEncoder.encode(url정보 , " utf-8");
+                    // 첨부파일 보낼때 다운로드 형식 : 브라우저 마다 형식이 다르다 ( 커스텀 불가능 )
+                response.setHeader("Content-Disposition", "attachment; filename "+ URLEncoder.encode( bfile.split("_")[1],"utf-8" ));
+
+
+
+                // HTTP가 파일 전송하는 방법 : 파일을 바이트로 전송
+
+                // 1. 해당 파일을 바이트로 불러온다  [ BufferedInputStream  ] new FileInputStream(file)
+                // BufferedInputStream fin = new BufferedInputStream( 파일스트림 );
+                    // 1-1 파일 입력 스트림( 바이트가 다니는 통로 ) 객체 생성
+                BufferedInputStream fin = new BufferedInputStream( new FileInputStream(file) );
+                    // 1-2 바이트 배열(고정길이) vs 리스트(가변길이)
+                        // 1. 파일의 사이즈/크기/용량 ( 파일의 크기만큼 바이트 배열 선언하기 위해 )
+                long fileSize = file.length();
+                        // 2.해당 파일의 사이즈 만큼 바이트 배열 선언
+                byte[] bytes = new byte[(int) fileSize]; // 배열의 길이는 int 형
+                    // 1-2 입력(불러오기) 메소드
+                        // 바이트 하나씩 읽어오면서 바이트 배열 저장 => 바이트 배열 필요하다.
+                fin.read(bytes); // - 입력스트립객체.read( 바이트배열 ) 하나씩 바이트를 읽어와서 해당 바이트 배열에 저장 해주는 함수.
+                
+                    // 1-3 (확인용) 읽어온 파일의 바이트가 들어있다.
+                System.out.println("bytes = " + bytes);
+
+                // 2. 불러온 바이트를 HTTP response 이용한 바이트로 응답한다. [ BufferedOutputStream ]
+                // BufferedOutputStream fout = new BufferedOutputStream( HTTP 응답스트림);
+                    // 2-1 HTTP 응답 스트림 객체 생성
+                BufferedOutputStream fout = new BufferedOutputStream(response.getOutputStream() );
+                    // 2-2 응답스트림.write( 내보내기할 바이트 배열 )내보내기할 바이트 배열 준비 상태이면 내보내기
+                fout.write(bytes);
+
+            }catch (Exception e){
+                System.out.println("FileService.fileDownLoad e = " + e);
+            }
+
+        }else {
+            System.out.println("첨부파일이 없다."); // 첨부파이링 없을수도 있다..
+            // 클라이언트가 다수 서버가 1  클라이언트가 한명 접속 중일떄 다른 한명이 삭제 할수도 있어서..
+        }
+
+        return;
+    }
+
+    // 3. 파일 삭제 [ 게시물 삭제 시 만약에 첨부파일이 있으면 첨부파일도 같이 삭제 , 게시물 수정시 첨부파일 변경하면 기존 첨부파일 삭제 ]
+    public boolean fileDelete(String bfile){
+        // 1. 경로와 파일을 합쳐서 파일 위치 찾기.
+        String filePath = uploadPath+bfile;
+        // 2. File 클래스 의 메소드 활용
+            // file.exists() : 해당 파일의 존재 여부
+            // file.length() : 해당 파일의 크기 ( 바이트 단위 )
+            // file.delete() : 해당 파일 삭제
+        File file = new File(filePath);
+        if(file.exists()){ // 해당 파일이 있으면 삭제
+            return file.delete(); // 해당 경로에 파일 삭제
+        }
+        return false;
+    }
 }
 /*
 

@@ -6,6 +6,7 @@ import ezenweb.medel.dto.BoardDto;
 import ezenweb.medel.dto.BoardPageDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -91,8 +92,31 @@ public class BoardService {
     }
 
     // 4. 글 수정 처리
+    public boolean doUpdateBoard(BoardDto boardDto){
+        System.out.println("BoardService.doUpdateBoard");
+        return boardDao.doUpdateBoard(boardDto);
+    }
 
     // 5. 글 삭제 처리
+    public boolean doDeleteBoard( @RequestParam int bno){
+        System.out.println("BoardService.doDeleteBoard");
+
+        // 게시판 정보 호출 - 레코드 삭제하기 전에 삭제할 첨부파일명을 임시로 꺼내둔다.
+        String bfile = boardDao.doGetBoardView(bno).getBfile();
+
+        // 1. DAO 처리
+        boolean result = boardDao.doDeleteBoard(bno);
+
+        // 2. Dao 처리 성공시 첨부파일도 삭제
+        if (result){
+            System.out.println("bfile = " + bfile);
+            if (bfile != null){ // 기존에 첨부파일이 있었으면 .
+                fileService.fileDelete(bfile); //  미리 꺼내둔 삭제할 파일명
+            }
+        }
+
+        return result;
+    }
 
 
 

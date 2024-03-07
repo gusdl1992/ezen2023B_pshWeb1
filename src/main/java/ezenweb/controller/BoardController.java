@@ -2,6 +2,7 @@ package ezenweb.controller;
 
 
 import ezenweb.Service.BoardService;
+import ezenweb.Service.FileService;
 import ezenweb.Service.MemberService;
 import ezenweb.medel.dto.BoardDto;
 import ezenweb.medel.dto.BoardPageDto;
@@ -21,6 +22,9 @@ public class BoardController {
     private HttpServletRequest request;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private FileService fileService;
+
 
     // 1. 글쓰기 처리                    /board/write.do       post          Dto         true/false
     @PostMapping("/write.do")
@@ -58,8 +62,30 @@ public class BoardController {
     }
 
     // 4. 글 수정 처리                   /board/update.do        put         dto
+    @PutMapping("/update.do")
+    @ResponseBody
+    public boolean doUpdateBoard(BoardDto boardDto){
+        System.out.println("BoardController.doUpdateBoard");
+        return boardService.doUpdateBoard(boardDto);
+    }
 
     // 5. 글 삭제 처리                   /board/delete.do      delete        게시물번호
+    @DeleteMapping("/delete.do")
+    @ResponseBody
+    public boolean doDeleteBoard( @RequestParam int bno){
+        System.out.println("BoardController.doDeleteBoard");
+        return boardService.doDeleteBoard(bno);
+    }
+
+    // 6. 다운로드 처리 ( 함수만들때 고민할점 . 1. 매개변수 : 무엇을??  2.반환 3. 사용처 : get HTTP 요청 )
+    @GetMapping("/file/download")
+    @ResponseBody   // @ResponseBody 응답 데이터를 객체로 하겠다. json
+    public void getBoardFileDownload(@RequestParam String bfile){
+        System.out.println("BoardController.getBoardFileDownload");
+        System.out.println("bfile = " + bfile);
+        fileService.fileDownLoad(bfile);
+        return;
+    }
 
     // ==================== 머스테치는 컨트롤에서 뷰 반환. ============================= //
 
@@ -83,3 +109,21 @@ public class BoardController {
     // 4. 글수정 페이지 이동            /board/update       GET
 
 } // class end
+
+/*
+            // * 5가지 클래스를 가져오는 방법
+            // 1.
+        FileService fileService = new FileService();
+        fileService.fileDownLoad();
+            // 2.
+        new FileService().fileDownLoad();
+            // 3.
+        FileService.getInstance().fileDownLoad();
+            // 4. static
+        FileService.fileDownLoad();
+            // 5.
+        fileService.fileDownLoad();
+
+
+
+*/

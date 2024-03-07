@@ -27,7 +27,25 @@ function onView(){
             document.querySelector('.mno').innerHTML = r.mno;
             document.querySelector('.bdate').innerHTML = r.bdate;
             document.querySelector('.bview').innerHTML = r.bview;
-            document.querySelector('.bfile').innerHTML = r.bfile;
+            // * 다운로드 링크 -> a 태그 추가 컨트롤러 6번 다운로드 처리 이동 왜 매개변수에 파일명으로 했는지 ...
+            document.querySelector('.bfile').innerHTML =`<a href="/board/file/download?bfile=${r.bfile}">${r.bfile}</a>`;
+            document.querySelector('.btnBox').innerHTML = `<button onclick="onDelete(${r.bno})" type="button">삭제</button>`
+            //  get 방식이 아니라 사용 불가 `<a href="/board/delete.do?bno=${r.bno}">삭제</a>`
+
         }
+    });
+}
+
+// 2. 게시물 삭제 함수
+function onDelete(bno){
+    $.ajax({
+        url : "/board/delete.do",
+        method : "delete" ,
+        data : {'bno' : bno} ,
+        success : (r) => {
+            if(r){alert('삭제성공'); location.href="/board";}
+            else{alert('삭제실패')}
+        }
+
     });
 }
