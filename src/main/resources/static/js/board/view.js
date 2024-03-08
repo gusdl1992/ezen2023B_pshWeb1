@@ -21,19 +21,39 @@ function onView(){
         data : { "bno" : bno  }, // 쿼리스트링 방식
         success : (r)=>{
             console.log(r);
-            document.querySelector('.bcno').innerHTML = r.bcno;
             document.querySelector('.btitle').innerHTML = r.btitle;
             document.querySelector('.bcontent').innerHTML = r.bcontent;
-            document.querySelector('.mno').innerHTML = r.mno;
+            document.querySelector('.bcno').innerHTML = r.bcno;
+            document.querySelector('.mid').innerHTML = r.mid;
             document.querySelector('.bdate').innerHTML = r.bdate;
             document.querySelector('.bview').innerHTML = r.bview;
             // * 다운로드 링크 -> a 태그 추가 컨트롤러 6번 다운로드 처리 이동 왜 매개변수에 파일명으로 했는지 ...
-            document.querySelector('.bfile').innerHTML =`<a href="/board/file/download?bfile=${r.bfile}">${r.bfile}</a>`;
-            document.querySelector('.btnBox').innerHTML = `<button onclick="onDelete(${r.bno})" type="button">삭제</button>`
-            //  get 방식이 아니라 사용 불가 `<a href="/board/delete.do?bno=${r.bno}">삭제</a>`
+                // * 다운로드 링크 유효성 검사
+            if(r.bfile != 'null'){ // 첨부파일이 null 이 아니면 넣어주기
+                document.querySelector('.bfile').innerHTML =`<a href="/board/file/download?bfile=${r.bfile}">${r.bfile}</a>`;
+            }
+            //* 삭제 / 수정버튼 활성화 ( 해당 보고있는 클라이언트가 게시물 작성자의 아이디와 동일하면  )
+                // 유효성 검사
+                // 현재 로그인된 아이디 또는 번호
+                // 방법1 ( 1. 헤더 HTML 가져온다. )
+//                let loginId = document.querySelector('.top_menu > #login_menu');
+//                console.log(loginId);
+                // 방법2 ( 2. 서버에게 요청 )
+                $.ajax({
+                    url : "/member/login/check",
+                    method : 'get' ,
+                    success : (loginId) => {
+                        if(loginId == r.mid){
+                            let btnHTML = `<button class="boardBtn" onclick="onDelete(${r.bno})" type="button">삭제</button>`;
+                            btnHTML += `<button class="boardBtn" type="button" onclick="location.href='/board/update?bno=${r.bno}'" > 수정 </button>`
+                            //  get 방식이 아니라 사용 불가 `<a href="/board/delete.do?bno=${r.bno}">삭제</a>`
+                            document.querySelector('.btnBox').innerHTML += btnHTML;
+                        }
+                    } // 2 success end
+                }); // 아작스 2번
 
-        }
-    });
+        } // 1 success end
+    }); // 아작스 1번
 }
 
 // 2. 게시물 삭제 함수

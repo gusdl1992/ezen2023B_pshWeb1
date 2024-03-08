@@ -37,3 +37,33 @@
 .categoryActive{
     background-color : black;
 }
+
+/* 뷰 꾸미기 */
+
+.boardViewBox{
+    margin-top : 20px;
+    padding : 50px;
+}
+.boardViewBox .viewTitle{
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.boardViewBox > div{
+    padding : 20px 0px;
+    border-bottom : 1px solid #e8e8e8;
+}
+.boardViewBox > div:nth-child(1){
+    /* 제목 */
+}
+.boardViewBox > div:nth-child(1) > span{font-size: 25px;}
+.boardViewBox > div:nth-child(2){ /* 기타정보 */
+    display: flex;
+    justify-content: space-between;
+}
+.boardViewBox > div:nth-child(3){ /* 내용 */
+    min-height: 500px; /* 높이 */
+}
+.boardViewBox > div:nth-child(4){ /* 첨부파일 */
+
+}

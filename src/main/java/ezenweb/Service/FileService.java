@@ -92,6 +92,10 @@ public class FileService {
                 BufferedOutputStream fout = new BufferedOutputStream(response.getOutputStream() );
                     // 2-2 응답스트림.write( 내보내기할 바이트 배열 )내보내기할 바이트 배열 준비 상태이면 내보내기
                 fout.write(bytes);
+                
+                // ------------ 버퍼 초기화 ( 안전하게 )
+                fin.close();        // 입력 스트림 닫기
+                fout.close();       // 출력 스트림 닫기
 
             }catch (Exception e){
                 System.out.println("FileService.fileDownLoad e = " + e);
