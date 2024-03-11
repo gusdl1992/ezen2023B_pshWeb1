@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Service
 public class BoardService {
@@ -157,7 +158,7 @@ public class BoardService {
     }
 
     // 8. 댓글 출력
-    public List< Map<String , String> > getReplyDo( int bno ){
+    public List< Map<String , Object> > getReplyDo(int bno ){
         System.out.println("BoardService.getReplyDo");
         return boardDao.getReplyDo(bno);
     }

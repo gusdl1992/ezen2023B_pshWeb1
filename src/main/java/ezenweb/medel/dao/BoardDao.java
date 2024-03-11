@@ -4,11 +4,9 @@ import ezenweb.medel.dto.BoardDto;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 public class BoardDao extends Dao {
@@ -193,10 +191,10 @@ public class BoardDao extends Dao {
     }
 
     // 8. 댓글 출력
-    public List< Map<String , String> > getReplyDo( int bno ){
+    public List< Map<String , Object> > getReplyDo( int bno ){
         System.out.println("BoardService.getReplyDo");
         //
-        List<Map<String , String> > list = new ArrayList<>();
+        List<Map<String , Object> > list = new ArrayList<>();   // 상위 댓글 리스트
 
         try {
             // 상위 댓글 먼저 출력
@@ -204,12 +202,34 @@ public class BoardDao extends Dao {
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             while (rs.next()){
-                Map<String , String> map = new HashMap<>();
+                // ========= 상위 댓글 하나씩 객체화 하는 곳 =========== //
+                Map<String , Object> map = new HashMap<>();
                 map.put("brno" , rs.getString("brno"));
                 map.put("brcontent" , rs.getString("brcontent"));
                 map.put("brdate" , rs.getString("brdate"));
                 map.put("mno" , rs.getString("mno"));
+
+                // =========== 해당 상위 댓글의 하윗 댓글들도 호출하기 ================= //
+                String subsql2 = "select * from breply where brindex = ? and bno =" + bno;
+                ps = conn.prepareStatement(subsql2);
+                ps.setInt(1, Integer.parseInt(rs.getString("brno") ) );
+                    // ( int ) : 캐스팅 = 부모,자식관계이여야한다. - Int 와 String 상하관계 아니다.(형변환) vs Integer.parseInt() : 형번환 함수
+                    // ****************** rs 사용 하면 안되는 이유 : 현재 상위 댓글 출력시 rs 사용중 ( while (rs.next() ) )
+
+                ResultSet rs2 = ps.executeQuery();
+                List<Map<String , Object>> subList = new ArrayList<>();
+                while (rs2.next()){
+                    Map<String , Object> subMap = new HashMap<>(); // 댓글 답변
+                    subMap.put("brno" , rs2.getString("brno"));
+                    subMap.put("brcontent" , rs2.getString("brcontent"));
+                    subMap.put("brdate" , rs2.getString("brdate"));
+                    subMap.put("mno" , rs2.getString("mno"));
+                    subList.add(subMap);
+                }
+                // =========== 해당 상위 댓글의 하윗 댓글들도 호출하기 end ================= //
+                map.put("subReply" , subList); // 상위 댓글 속성에 하위 댓글 리스트 대입
                 list.add(map);
+                // ========= 상위 댓글 하나씩 객체화 하는 곳 END =========== //
             }
         }catch (Exception e){
             System.out.println("e = " + e);
