@@ -30,7 +30,7 @@ public class ProductDto {
     // - 출력할떄 이미지
     private List< String > pimg;
     // - 출력할때 작성자 번호가 아닌 작성자 아이디
-    private String min;
+    private String mid;
 
     // + 1. 제품 등록 [ pname , pprice , pcontent , plat , plng , mno(세션) , uploadFiles  ]
 
